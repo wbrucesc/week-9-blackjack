@@ -87,7 +87,6 @@ public class Deck {
             } else {
                 handValue += 11;
             }
-
         }
         return handValue;
     }
@@ -101,24 +100,12 @@ public class Deck {
         this.cards.remove(i);
     }
 
-    public void addACard(Card cardToAdd) {
-        this.cards.add(cardToAdd);
-    }
 
     public void draw(Deck fromDeck) {
         this.cards.add(fromDeck.getACard(0));
         fromDeck.removeCard(0);
     }
 
-    public void moveCardsToDeck(Deck toDeck) {
-        int thisDeck = this.cards.size();
-        for (int i = 0; i < thisDeck; i++) {
-            toDeck.addACard(this.getACard(i));
-        }
-        for (int i = 0; i < thisDeck; i++) {
-            this.removeCard(0);
-        }
-    }
 
     public String toString() {
         String listDeck = "";
