@@ -1,6 +1,7 @@
 package com.will;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -9,17 +10,16 @@ public class Deck {
     private List<Card> cards = new ArrayList<Card>();
     private String[] suits = {"Spades", "Hearts", "Clubs", "Diamonds"};
 
-    private int cardsDealt = 0;
-
+    //creates full deck
     public void fullDeck() {
         for (String suit : suits) {
             for (int value = 1; value <= 13; value++) {
                 cards.add(new Card(value, suit));
             }
         }
-        cardsDealt = 0;
     }
 
+    //shuffles deck
     public void shuffle() {
         List<Card> shuffleDeck = new ArrayList<Card>(cards);
         Collections.shuffle(shuffleDeck);
@@ -35,6 +35,7 @@ public class Deck {
         int handValue = 0;
         int aces = 0;
 
+        //for loop & switch to assign value to each card in a deck/hand
         for (Card card : this.cards) {
             switch (card.getFaceValue()) {
                 case 2:
@@ -79,6 +80,7 @@ public class Deck {
             }
         }
 
+        //for loop to assign value to aces based on value of hand
         for (int i = 0; i < aces; i++) {
             if (handValue > 10) {
                 handValue += 1;
@@ -89,11 +91,6 @@ public class Deck {
         }
         return handValue;
     }
-
-//    public ArrayList<Card> getCards() {
-//        return cards;
-//    }
-
 
 
     public Card getACard(int i) {
@@ -114,21 +111,19 @@ public class Deck {
     }
 
     public void moveCardsToDeck(Deck toDeck) {
-        int thisDeckSize = this.cards.size();
-        for (int i = 0; i < thisDeckSize; i++) {
+        int thisDeck = this.cards.size();
+        for (int i = 0; i < thisDeck; i++) {
             toDeck.addACard(this.getACard(i));
         }
-        for (int i = 0; i < thisDeckSize; i++) {
+        for (int i = 0; i < thisDeck; i++) {
             this.removeCard(0);
         }
     }
 
     public String toString() {
         String listDeck = "";
-        int i = 0;
         for (Card card : this.cards) {
             listDeck += "\n" + card.toString();
-            i++;
         }
         return listDeck;
     }

@@ -3,120 +3,143 @@ package com.will;
 import java.util.Scanner;
 
 public class Main {
+
     public static void main(String[] args) {
-
-
-
-        System.out.println("Welcome to Blackjack!" + "\n" + "------------------------");
-
-        Deck playingDeck = new Deck();
-        playingDeck.fullDeck();
-        playingDeck.shuffle();
-//        System.out.println(playingDeck.toString());
-
-
-
-        //create player's deck/hand
-        Deck playerCards = new Deck();
-
-        //create dealer's deck/hand
-        Deck dealerCards = new Deck();
-
         boolean gameOver = false;
 
-        //Deal 2 cards to player
-        playerCards.draw(playingDeck);
-        playerCards.draw(playingDeck);
-//
-//
-//      //Deal 2 cards to dealer
-        dealerCards.draw(playingDeck);
-        dealerCards.draw(playingDeck);
+        while (gameOver == false) {
+            System.out.println("Welcome to Blackjack!");
+            System.out.println("=======================");
 
-        if (playerCards.valueOfCards() == 21) {
-            System.out.println("You got blackjack!");
-        } else if (dealerCards.valueOfCards() == 21 ) {
-            System.out.println("Dealer has blackjack :(");
-        }
+            //creates new deck, adds cards, shuffles deck
+            Deck playingDeck = new Deck();
+            playingDeck.fullDeck();
+            playingDeck.shuffle();
 
-        while (true) {
-            Scanner userInput = new Scanner(System.in);
+            //creates a deck/hand for player and dealer
+            Deck playerCards = new Deck();
+            Deck dealerCards = new Deck();
 
-            System.out.println("Player has: " + playerCards.toString());
-            System.out.println("Player hand worth: " + playerCards.valueOfCards());
-            System.out.println("-----------------------");
-//
-            System.out.println("Dealer has: " + dealerCards.getACard(0).toString() + "\n" + "hidden card");
-            System.out.println("-----------------------");
+            //deals 2 cards to both player and dealer
+            playerCards.draw(playingDeck);
+            playerCards.draw(playingDeck);
 
-            System.out.println("Would you like to (1) Hit or (2) Stand? ");
-            String choice = userInput.nextLine();
+            dealerCards.draw(playingDeck);
+            dealerCards.draw(playingDeck);
 
-            if (choice.equals("1")) {
-                playerCards.draw(playingDeck);
-                System.out.println("You just drew a: " + playerCards.getACard(playerCards.getDeckSize() - 1).toString());
-                System.out.println("==================");
 
-                if (playerCards.valueOfCards() > 21) {
-                    System.out.println("Bust! Your hand worth: " + playerCards.valueOfCards());
-                    System.out.println("========================");
+            while (true) {
+                Scanner userInput = new Scanner(System.in);
+
+                System.out.println("PLAYER HAS: " + playerCards.toString());
+                System.out.println("PLAYER HAND IS WORTH: " + playerCards.valueOfCards());
+                System.out.println("--------------------------");
+                System.out.println("DEALER HAS: \n" + dealerCards.getACard(0).toString() + "\n" + "hidden card");
+
+                //if player gets blackjack on first hand (& dealer didn't) then they win and game ends
+                if ((playerCards.valueOfCards() == 21) && ((dealerCards.valueOfCards() != 21) && gameOver == false)) {
+                    System.out.println("YOU GOT BLACKJACK ON THE FIRST HAND! YOU WIN!");
+                    System.out.println("*************************");
                     gameOver = true;
                     break;
                 }
+
+                //if dealer gets blackjack on first hand (& player didn't) then they win and game ends
+                if ((dealerCards.valueOfCards() == 21) && ((playerCards.valueOfCards() != 21) && gameOver == false)) {
+                    System.out.println("DEALER GOT BLACKJACK ON THE FIRST HAND! YOU LOSE!");
+                    System.out.println("*************************");
+                    gameOver = true;
+                    break;
+                }
+
+                System.out.println("Would you like to (1) Hit or (2) Stand?");
+                String choice = userInput.nextLine();
+
+                //player chooses to hit
+                if(choice.equals("1")) {
+
+                    playerCards.draw(playingDeck);
+                    System.out.println("YOU DREW A: " + playerCards.getACard(playerCards.getDeckSize() - 1).toString());
+                    System.out.println("--------------------------");
+
+                    //player busts if value of cards > 21
+                    if (playerCards.valueOfCards() > 21) {
+                        System.out.println("BUST! YOUR HAND WORTH: " + playerCards.valueOfCards());
+                        System.out.println("--------------------------");
+                        gameOver = true;
+                        break;
+                    }
+                    //player gets blackjack if value of cards = 21
+                    if (playerCards.valueOfCards() == 21) {
+                        System.out.println("*** YOU GOT BLACKJACK! YOU WIN ***");
+                        System.out.println("***********************************");
+                        gameOver = true;
+                        break;
+                    }
+
+                }
+
+                //player chooses to stand
+                if (choice.equals("2")) {
+                    break;
+                }
+
             }
 
-            if (choice.equals("2")) {
-                break;
-            }
-        }
+            //if stand chosen then reveal dealer's cards
+            System.out.println("DEALER HAS: " + dealerCards.toString());
 
-            System.out.println("Dealer's cards revealed: " + dealerCards.toString());
-//            System.out.println("Dealer's hand worth: " + dealerCards.valueOfCards());
-
-
-
-            while ((dealerCards.valueOfCards()) < 17 && gameOver == false) {
+            //while loop for dealer to continue drawing cards while value of hand < 17
+            while ((dealerCards.valueOfCards() < 17) && gameOver == false) {
                 dealerCards.draw(playingDeck);
-                System.out.println("Dealer drew a: " + dealerCards.getACard(dealerCards.getDeckSize() - 1).toString());
+                System.out.println("DEALER DREW A: " + dealerCards.getACard(dealerCards.getDeckSize() - 1));
             }
 
-            if ((dealerCards.valueOfCards() > playerCards.valueOfCards()) && gameOver == false) {
-                System.out.println("The dealer won this time! ");
-                gameOver = true;
-            }
+            System.out.println("DEALER'S HAND WORTH: " + dealerCards.valueOfCards());
+            System.out.println(("--------------------------"));
 
-            System.out.println("Dealer's hand worth: " + dealerCards.valueOfCards());
+            //value of dealer's hand > 21 = BUST
             if ((dealerCards.valueOfCards() > 21) && gameOver == false) {
-                System.out.println("Dealer busts! You won!");
+                System.out.println("DEALER BUSTS! YOU WIN");
                 gameOver = true;
             }
 
-            if ((playerCards.valueOfCards() > dealerCards.valueOfCards()) || (playerCards.valueOfCards() == 21) && gameOver == false) {
-                System.out.println("Player's hand worth: " + playerCards.valueOfCards());
-                System.out.println("You won!");
+            //value of dealer's hand > player's hand = Dealer wins
+            if ((dealerCards.valueOfCards() > playerCards.valueOfCards()) && gameOver == false) {
+                System.out.println("DEALER WINS");
                 gameOver = true;
             }
 
-//        playingDeck.getDeckSize();
-//        System.out.println("Player has " + playerCards.getDeckSize() + " cards.");
+            //value of player's hand > dealer's hand = Player wins
+            if ((playerCards.valueOfCards() > dealerCards.valueOfCards()) && gameOver == false) {
+                System.out.println("YOU WIN");
+                gameOver = true;
+            }
 
-//
+            //player wins game if hand has value of 21 (gets blackjack)
+            if ((playerCards.valueOfCards() == 21) && gameOver == false) {
+                System.out.println("*** YOU GOT BLACKJACK! ***");
+                gameOver = true;
+            }
 
-//
+            //dealer wins if hand has value of 21 (gets blackjack)
+            if ((dealerCards.valueOfCards() == 21) && gameOver == false ) {
+                System.out.println("*** DEALER HAS BLACKJACK! ***");
+                gameOver = true;
+            }
 
-//        System.out.println("Dealer has " + dealerCards.getDeckSize() + " cards.");
-//
-////        newDeck.dealCard();
-//        System.out.println("New Deck has " + playingDeck.getDeckSize() + " cards.");
-//        System.out.println(newDeck.dealCard());
-//        System.out.println(newDeck.getCards());
+            //if value of player and dealer's hands are equal = PUSH
+            if ((playerCards.valueOfCards() == dealerCards.valueOfCards()) && gameOver == false) {
+                System.out.println("PUSH");
+                gameOver = true;
+            }
 
+            //if gameOver is true then prints "game over" and exits program
+            if (gameOver == true) {
+                System.out.println("--------Game Over--------");
+            }
 
-
-
-
-
-
+        }
 
     }
 }

@@ -25,6 +25,7 @@ public class Card {
         this.suit = suit;
     }
 
+    //switch that assigns string value based on a card's facevalue
     public String getValueAsAString() {
         switch (faceValue) {
             case 1: return "Ace";
